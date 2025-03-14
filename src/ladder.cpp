@@ -73,7 +73,7 @@ void print_word_ladder(const vector<string>& ladder) {
         cout << "No word ladder found.\n";
         return;
     }
-    cout << "Word latter found: ";
+    cout << "Word ladder found: ";
     for (const string& word : ladder) {
         cout << word << " ";
     }
