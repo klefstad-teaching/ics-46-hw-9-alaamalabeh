@@ -2,43 +2,78 @@
 #include <algorithm>
 
 
+// vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& previous) {
+//     int n = G.numVertices;
+//     vector<int> distances(n, INF);
+//     vector<bool> visited(n, false);
+//     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+
+//     distances[source] = 0;
+//     pq.push({0, source});
+
+//     auto process_node = [&](int u, auto& self) -> void {
+//         if (pq.empty()) return;
+
+//         u = pq.top().second;
+//         pq.pop();
+
+//         if (visited[u]) {
+//             self(u, self);
+//             return;
+//         }
+
+//         visited[u] = true;
+
+//         for (const Edge& edge : G[u]) {
+//             int v = edge.dst;
+//             int weight = edge.weight;
+
+//             if (!visited[v] && distances[u] + weight < distances[v]) {
+//                 distances[v] = distances[u] + weight;
+//                 previous[v] = u;
+//                 pq.push({distances[v], v});
+//             }
+//         }
+
+//         self(u, self);
+//     };
+
+//     process_node(source, process_node);
+//     return distances;
+// }
+
 vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& previous) {
     int n = G.numVertices;
     vector<int> distances(n, INF);
     vector<bool> visited(n, false);
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
-
+    
+    // Initialize distances and previous
     distances[source] = 0;
+    previous.resize(n, -1);  // Initialize previous with -1
+    
     pq.push({0, source});
-
-    auto process_node = [&](int u, auto& self) -> void {
-        if (pq.empty()) return;
-
-        u = pq.top().second;
+    
+    while (!pq.empty()) {
+        int u = pq.top().second;
         pq.pop();
-
-        if (visited[u]) {
-            self(u, self);
-            return;
-        }
-
+        
+        if (visited[u]) continue;  // Skip if already processed
+        
         visited[u] = true;
-
+        
         for (const Edge& edge : G[u]) {
             int v = edge.dst;
             int weight = edge.weight;
-
-            if (!visited[v] && distances[u] + weight < distances[v]) {
+            
+            if (distances[u] + weight < distances[v]) {
                 distances[v] = distances[u] + weight;
                 previous[v] = u;
                 pq.push({distances[v], v});
             }
         }
-
-        self(u, self);
-    };
-
-    process_node(source, process_node);
+    }
+    
     return distances;
 }
 
