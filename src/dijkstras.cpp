@@ -47,26 +47,26 @@ vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& prev
     vector<int> distances(n, INF);
     vector<bool> visited(n, false);
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
-    
-    // Initialize distances and previous
+
     distances[source] = 0;
-    previous.resize(n, -1);  // Initialize previous with -1
+    previous.assign(n, -1);
     
     pq.push({0, source});
     
     while (!pq.empty()) {
         int u = pq.top().second;
+        int dist_u = pq.top().first;
         pq.pop();
-        
-        if (visited[u]) continue;  // Skip if already processed
-        
-        visited[u] = true;
+
+        if (dist_u > distances[u]) {
+            continue;
+        }
         
         for (const Edge& edge : G[u]) {
             int v = edge.dst;
             int weight = edge.weight;
-            
-            if (distances[u] + weight < distances[v]) {
+
+            if (distances[u] != INF && distances[u] + weight < distances[v]) {
                 distances[v] = distances[u] + weight;
                 previous[v] = u;
                 pq.push({distances[v], v});
@@ -79,16 +79,26 @@ vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& prev
 
 vector<int> extract_shortest_path(const vector<int>& distances, const vector<int>& previous, int destination) {
     vector<int> path;
+
     if (distances[destination] == INF) {
-        cout << "No path found to vertex " << destination << endl;
         return path;
     }
 
-    for (int v = destination; v != -1; v = previous[v]) {
-        path.push_back(v);
+    int max_iterations = previous.size();
+    int iterations = 0;
+    
+    for (int at = destination; at != -1 && iterations < max_iterations; at = previous[at], iterations++) {
+        path.push_back(at);
+
+        if (path.size() > 1 && path.back() == path[path.size() - 2]) {
+            break;
+        }
     }
+
     reverse(path.begin(), path.end());
+    
     return path;
+}
 }
 
 void print_path(const vector<int>& path, int total) {
