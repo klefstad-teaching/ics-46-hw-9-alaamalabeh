@@ -5,25 +5,6 @@ void error(string word1, string word2, string msg) {
     cout << "Error: " << msg << " (" << word1 << " -> " << word2 << ")\n";
 }
 
-// bool edit_distance_within(const std::string& str1, const std::string& str2, int d) {
-//     int len1 = str1.length(), len2 = str2.length();
-//     if (abs(len1 - len2) > d) return false;
-
-//     int diff = 0, i = 0, j = 0;
-//     while (i < len1 && j < len2) {
-//         if (str1[i] != str2[j]) {
-//             if (++diff > d) return false;
-//             if (len1 > len2) i++;
-//             else if (len1 < len2) j++;
-//             else { i++; j++; }
-//         } else {
-//             i++;
-//             j++;
-//         }
-//     }
-//     return true;
-// }
-
 bool edit_distance_within(const std::string& str1, const std::string& str2, int d) {
     int len1 = str1.length();
     int len2 = str2.length();
@@ -92,7 +73,6 @@ vector<string> generate_word_ladder(const string& begin_word, const string& end_
 void load_words(set<string> & word_list, const string& file_name) {
     ifstream file(file_name);
     if (!file) {
-        //cerr << "Error" << file_name << endl;
         return;
     }
     string word;
@@ -126,12 +106,10 @@ void verify_word_ladder() {
     cin >> end_word;
 
     if (start_word == end_word) {
-        //error(start_word, end_word, "Start and end words must be different");
         return;
     }
 
     if (dictionary.find(end_word) == dictionary.end()) {
-        //error(start_word, end_word, "End word must be in the dictionary");
         return;
     }
 
